@@ -34,16 +34,19 @@ class Panel implements \Tracy\IBarPanel
 
 	/** @var Latte\Engine */
 	private $latte;
-
+	
+	/** @var string|NULL */
+	private $tempDir;
 	/**
 	 * @param Translator $translator
 	 * @param Nette\Http\IRequest $httpRequest
 	 * @throws Nette\InvalidArgumentException
 	 */
-	public function __construct(Translator $translator, Nette\Http\IRequest $httpRequest)
+	public function __construct(?string $tempDir,Translator $translator, Nette\Http\IRequest $httpRequest)
 	{
 		$this->translator = $translator;
 		$this->httpRequest = $httpRequest;
+		$this->tempDir = $tempDir;
 
 		$this->processRequest();
 	}
