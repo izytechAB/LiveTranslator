@@ -2,7 +2,7 @@
 
 namespace LiveTranslator;
 
-use Nette;
+use Nette\SmartObject;
 
 /**
  * Translator implementation.
