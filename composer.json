@@ -21,7 +21,7 @@
 		"classmap": ["LiveTranslator"]
 	},
 	"require": {
-		"nette/nette": "~2.2"
+		"nette/nette": "^3.0"
 	},
 	"minimum-stability": "RC",
     "require-dev": {
