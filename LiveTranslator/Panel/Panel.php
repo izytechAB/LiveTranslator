@@ -8,6 +8,8 @@ namespace LiveTranslator;
 
 use \Nette;
 use \Latte;
+use \Tracy\IBarPanel;
+use \Tracy\Debugger;
 
 class Panel implements \Tracy\IBarPanel
 {
@@ -30,7 +32,8 @@ class Panel implements \Tracy\IBarPanel
 	/** @var Nette\Http\IRequest */
 	protected $httpRequest;
 
-
+	/** @var Latte\Engine */
+	private $latte;
 
 	/**
 	 * @param Translator $translator
@@ -174,5 +177,43 @@ class Panel implements \Tracy\IBarPanel
 		});
 
 		return $latte;
+	}
+		private function getLatte(): Latte\Engine
+	{
+		if (!isset($this->latte)) {
+			$this->latte = new Latte\Engine();
+			$this->latte->setAutoRefresh(FALSE);
+			if ($this->tempDir !== NULL) {
+				$this->latte->setTempDirectory($this->tempDir);
+			}
+			$this->latte->onCompile[] = function (Latte\Engine $latte) {
+				$set = new Latte\Macros\MacroSet($latte->getCompiler());
+				$set->addMacro('link', 'echo %escape(call_user_func($getLink, %node.word, %node.array))');
+			};
+			$this->latte->addFilter('attachmentLabel', function (MimePart $attachment) {
+				$contentDisposition = $attachment->getHeader('Content-Disposition');
+				$contentType = $attachment->getHeader('Content-Type');
+				$matches = Strings::match($contentDisposition, '#filename="(.+?)"#');
+				return ($matches ? "$matches[1] " : '') . "($contentType)";
+			});
+			$this->latte->addFilter('plainText', function (MimePart $part) {
+				$ref = new \ReflectionProperty('Nette\Mail\MimePart', 'parts');
+				$ref->setAccessible(TRUE);
+				$queue = [$part];
+				for ($i = 0; $i < count($queue); $i++) {
+					/** @var MimePart $subPart */
+					foreach ($ref->getValue($queue[$i]) as $subPart) {
+						$contentType = $subPart->getHeader('Content-Type');
+						if (Strings::startsWith($contentType, 'text/plain') && $subPart->getHeader('Content-Transfer-Encoding') !== 'base64') { // Take first available plain text
+							return $subPart->getBody();
+						} elseif (Strings::startsWith($contentType, 'multipart/alternative')) {
+							$queue[] = $subPart;
+						}
+					}
+				}
+				return $part->getBody();
+			});
+		}
+		return $this->latte;
 	}
 }
