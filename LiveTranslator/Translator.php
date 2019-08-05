@@ -2,7 +2,7 @@
 
 namespace LiveTranslator;
 
-use Nette\SmartObject;
+use \Nette;
 
 /**
  * Translator implementation.
@@ -16,9 +16,11 @@ use Nette\SmartObject;
  * @property string $presenterLanguageParam
  * @property-read bool $currentLangDefault
  */
-class Translator extends Nette\SmartObject implements Nette\Localization\ITranslator
+class Translator implements Nette\Localization\ITranslator
 {
 
+	use \Nette\SmartObject;
+	
 	/** @var string plural-form meta */
 	public static $defaultPluralForms = 'nplurals=1; plural=0;';
 
@@ -279,7 +281,7 @@ class Translator extends Nette\SmartObject implements Nette\Localization\ITransl
 	 * @return string
 	 * @throws TranslatorException
 	 */
-	public function translate($string, $count = NULL)
+	public function translate($string, ...$count = NULL):string
 	{
 		$hasVariants = FALSE;
 		if (is_array($string)) {
