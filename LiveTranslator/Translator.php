@@ -16,7 +16,7 @@ use Nette;
  * @property string $presenterLanguageParam
  * @property-read bool $currentLangDefault
  */
-class Translator extends Nette\Object implements Nette\Localization\ITranslator
+class Translator extends Nette\SmartObject implements Nette\Localization\ITranslator
 {
 
 	/** @var string plural-form meta */
