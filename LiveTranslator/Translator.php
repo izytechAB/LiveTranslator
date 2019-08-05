@@ -281,7 +281,7 @@ class Translator implements Nette\Localization\ITranslator
 	 * @return string
 	 * @throws TranslatorException
 	 */
-	public function translate($string, ...$count = NULL):string
+	public function translate($string, ...$count):string
 	{
 		$hasVariants = FALSE;
 		if (is_array($string)) {
