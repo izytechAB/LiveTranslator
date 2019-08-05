@@ -6,12 +6,13 @@
 
 namespace LiveTranslator;
 
-use Nette;
-use Latte;
+use \Nette;
+use \Latte;
 
-class Panel extends Nette\SmartObject implements \Tracy\IBarPanel
+class Panel implements \Tracy\IBarPanel
 {
-
+	use \Nette\SmartObject;
+	
 	const XHR_HEADER = 'X-Translation-Client';
 
 	const LANGUAGE_KEY = 'X-LiveTranslator-Lang',
