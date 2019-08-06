@@ -161,9 +161,8 @@ class Translator implements Nette\Localization\ITranslator
 		if (!$this->presenterLanguageParam) {
 			return NULL;
 		}
-		return $this->application->presenter->link('this', array($this->presenterLanguageParam => $switchLang));
+		return $this->application->getPresenter()->link('this', array($this->presenterLanguageParam => $switchLang));
 	}
-
 
 	/**
 	 * @param string $namespace
