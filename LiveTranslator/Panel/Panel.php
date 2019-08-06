@@ -21,10 +21,10 @@ class Panel implements \Tracy\IBarPanel
 		NAMESPACE_KEY = 'X-LiveTranslator-Ns';
 
 	/** @var string */
-	protected $layout = 'vertical';
+	public $layout = 'vertical';
 
 	/** @var int */
-	protected $height = 465;
+	public  $height = 465;
 
 	/** @var Translator */
 	protected $translator;
@@ -116,7 +116,10 @@ class Panel implements \Tracy\IBarPanel
 	 */
 	public function getPanel()
 	{
+		
+
 		$latte = $this->createTemplate();
+		//$latte = $this->getLatte();
 		$file = $this->translator->isCurrentLangDefault() ? '/panel.inactive.phtml' : '/panel.phtml';
 		$parameters = array();
 		$parameters['panel'] = $this;
@@ -124,11 +127,14 @@ class Panel implements \Tracy\IBarPanel
 		$parameters['lang'] = $this->translator->getCurrentLang();
 		if ($this->translator->getPresenterLanguageParam()){
 			$parameters['availableLangs'] = $this->translator->getAvailableLanguages();
+			
 		}
 		else {
 			$parameters['availableLangs'] = NULL;
+
 		}
 		return $latte->renderToString(__DIR__ . $file, $parameters);
+
 	}
 
 
@@ -181,7 +187,8 @@ class Panel implements \Tracy\IBarPanel
 
 		return $latte;
 	}
-		private function getLatte(): Latte\Engine
+	
+	private function getLatte(): Latte\Engine
 	{
 		if (!isset($this->latte)) {
 			$this->latte = new Latte\Engine();
@@ -207,7 +214,8 @@ class Panel implements \Tracy\IBarPanel
 					/** @var MimePart $subPart */
 					foreach ($ref->getValue($queue[$i]) as $subPart) {
 						$contentType = $subPart->getHeader('Content-Type');
-						if (Strings::startsWith($contentType, 'text/plain') && $subPart->getHeader('Content-Transfer-Encoding') !== 'base64') { // Take first available plain text
+						if (Strings::startsWith($contentType, 'text/plain') && $subPart->getHeader('Content-Transfer-Encoding') !== 
+'base64') { // Take first available plain text
 							return $subPart->getBody();
 						} elseif (Strings::startsWith($contentType, 'multipart/alternative')) {
 							$queue[] = $subPart;
