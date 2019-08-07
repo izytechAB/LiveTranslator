@@ -99,16 +99,19 @@
 	width: {$panel->layout == 'vertical' ? '58%' : '68%'|noescape};
 	height: 100%;
 	margin: -1px -1px -1px 0;
+        padding: 10px;
 	float: right;
 	position: relative;
 }
 
 #TranslationPanel div.TranslationPanel-stringVariant {
-	height: 127px;
-{if $panel->layout == 'horizontal'}
-	width: 50%;
-	float: left;
-{/if}
+	height: 227px;
+        padding: 10px;
+        
+        {if $panel->layout == 'horizontal'}
+        width: 50%;
+        float: left;
+        {/if}
 }
 
 #TranslationPanel div.TranslationPanel-stringVariant sup {
@@ -134,7 +137,7 @@ div.TranslationPanel-stringVariant textarea.disabled {
 
 #TranslationPanel-tools {
 	position: absolute;
-	bottom: -1px;
+	bottom: -5px;
 	right: 0px;
 	width: 98%;
 	background-color: #EDEAE0;
@@ -229,7 +232,6 @@ JSON.stringify = JSON.stringify || function (obj) {
 
 <script type="text/javascript">
 /* <![CDATA[ */
-
 function in_array (needle, haystack, argStrict) {
    var key = '', strict = !!argStrict;
 
@@ -277,8 +279,9 @@ var translationPanel = {
 	iconNotification: "data:image\/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8\/9hAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAoNJREFUeNqUU01IVFEU\/u59d340\/Knoh8JNhK6qMaMoAoX2EdUmaNMihjZFrQwUIle1iCCibURuakpqk5hSmSWEjkmM\/VApjqjhOPp804zOe+\/ezr1vRmxR0WHO3HfenPOd73z3DEtcPfREcnU0kvE7Nwzm+iX8uJT+XiUloADGGJgQKzwcusm51Yq1pn97eOWgajjQCLu1F5v3x1C7azdqYk2I7GwAQmGgkMfP0SSGOtoRXr+Rec5SI5SsVwpneSh0RChqI6WC57mov3Yby71dUN\/H4I2+haiuQnFmBuvOXIK\/UoRfyKtKArYqKrDj3EW8j5+G0Ew0iP52UyPIdd5BeNt28C1bobwC\/Nk0\/MlxSGqw724CorISzC3C4qB3XgBAw9CHw7cXiHaIZibqlii5Bbm0CEk50eE+qM+jyH39gmi8zWjAy\/U6kAtZwrGCeFUoDqWBhTDFKhwByBWBgvMSgDYKpD1vTkZFXJ\/EkxsGBKCBjXNzSg26ysA00p2yxNqCCFnwii6cuWyQlHOozjLPwbjE1s4adiKYgJmE6b5u5HgUzniKNFUlaIWq6AdwAtY7Ac4MKxArzTAAKHgkHMeY4z8dcTLdHZ8m35WZvW7eM5T3JGlrGR0YibxM8WzPM2Rc+ViYbQsLTB2rwqnLgxeoZn6gOeaUhXwxt3i+ZVPtDUoTr7qeEzGFrCt7Xmbt+7e+TfcH10iLxF2FB9cPT9Q9WoLZYh6M256auEdPb\/D73ZAA+DHQEssHI2gWPnlRIX2iBnUJG0ow45RkU0oSfzDOSjegBeLUmRclpo5XI32ymkCV+UP9zYQu\/phMBgprMAKBp\/QN\/bO4vINNa+Jh\/Kf9EmAAjwQEmDZvGoIAAAAASUVORK5CYII=",
 
 	originalValue: null,
-
+        
 	init: function() {
+    
 		this.icon = document.getElementById('TranslationPanel-icon');
 		this.iconNormal = document.getElementById('TranslationPanel-icon').src;
 
@@ -585,6 +588,14 @@ var translationPanel = {
 			.replace('>', '&gt;');
 	},
 };
+/**
+ * QD fix delay init of translationPanel.
+ */
+$(document).ready(function() {
+    setTimeout(function(){
+        translationPanel.init();
+     }, 1000);
+});
 
 /* ]]> */
 </script>
