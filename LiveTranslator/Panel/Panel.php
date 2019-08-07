@@ -1,9 +1,4 @@
-<?php
-
-// todo proč se window.open kterej má ukázat erroru nezobrazí?
-// todo zakázat uložení / nebo nějak to vymyslet když edituje a smaže celej text
-// todo když hledá string nejde pak na překlad kliknout na poprvý
-
+<?PHP
 namespace LiveTranslator;
 
 use \Nette;
@@ -11,6 +6,12 @@ use \Latte;
 use \Tracy\IBarPanel;
 use \Tracy\Debugger;
 
+
+/*
+ * @todo hence why the window.open to show the error does not appear? // google translate
+ * @todo disable saving / or somehow invent it when editing and deleting all text //google translate
+ * @todo when looking for a string not then click on the translation the first time // google translate
+ */
 class Panel implements \Tracy\IBarPanel
 {
 	use \Nette\SmartObject;
