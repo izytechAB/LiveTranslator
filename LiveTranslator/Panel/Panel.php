@@ -18,13 +18,13 @@ class Panel implements \Tracy\IBarPanel
 	const XHR_HEADER = 'X-Translation-Client';
 
 	const LANGUAGE_KEY = 'X-LiveTranslator-Lang',
-		NAMESPACE_KEY = 'X-LiveTranslator-Ns';
+	      NAMESPACE_KEY = 'X-LiveTranslator-Ns';
 
 	/** @var string */
-	public $layout = 'vertical';
+	public $layout = 'horizontal';
 
 	/** @var int */
-	public  $height = 465;
+	public  $height = 125;
 
 	/** @var Translator */
 	protected $translator;
@@ -37,7 +37,8 @@ class Panel implements \Tracy\IBarPanel
 	
 	/** @var string|NULL */
 	private $tempDir;
-	/**
+	
+        /**
 	 * @param Translator $translator
 	 * @param Nette\Http\IRequest $httpRequest
 	 * @throws Nette\InvalidArgumentException
@@ -102,10 +103,8 @@ class Panel implements \Tracy\IBarPanel
 	 */
 	public function getTab()
 	{
-		
-		return $this->getLatte()->renderToString(__DIR__ . '/tab.phtml');
-		//$template = new Nette\Templating\FileTemplate(__DIR__ . '/tab.phtml');
-		//return $template->__toString();
+		$latte = new Latte\Engine;
+		return $latte->renderToString(__DIR__ . '/tab.phtml');
 	}
 
 
@@ -119,7 +118,6 @@ class Panel implements \Tracy\IBarPanel
 		
 
 		$latte = $this->createTemplate();
-		//$latte = $this->getLatte();
 		$file = $this->translator->isCurrentLangDefault() ? '/panel.inactive.phtml' : '/panel.phtml';
 		$parameters = array();
 		$parameters['panel'] = $this;
@@ -186,45 +184,5 @@ class Panel implements \Tracy\IBarPanel
 		});
 
 		return $latte;
-	}
-	
-	private function getLatte(): Latte\Engine
-	{
-		if (!isset($this->latte)) {
-			$this->latte = new Latte\Engine();
-			$this->latte->setAutoRefresh(FALSE);
-			if ($this->tempDir !== NULL) {
-				$this->latte->setTempDirectory($this->tempDir);
-			}
-			$this->latte->onCompile[] = function (Latte\Engine $latte) {
-				$set = new Latte\Macros\MacroSet($latte->getCompiler());
-				$set->addMacro('link', 'echo %escape(call_user_func($getLink, %node.word, %node.array))');
-			};
-			$this->latte->addFilter('attachmentLabel', function (MimePart $attachment) {
-				$contentDisposition = $attachment->getHeader('Content-Disposition');
-				$contentType = $attachment->getHeader('Content-Type');
-				$matches = Strings::match($contentDisposition, '#filename="(.+?)"#');
-				return ($matches ? "$matches[1] " : '') . "($contentType)";
-			});
-			$this->latte->addFilter('plainText', function (MimePart $part) {
-				$ref = new \ReflectionProperty('Nette\Mail\MimePart', 'parts');
-				$ref->setAccessible(TRUE);
-				$queue = [$part];
-				for ($i = 0; $i < count($queue); $i++) {
-					/** @var MimePart $subPart */
-					foreach ($ref->getValue($queue[$i]) as $subPart) {
-						$contentType = $subPart->getHeader('Content-Type');
-						if (Strings::startsWith($contentType, 'text/plain') && $subPart->getHeader('Content-Transfer-Encoding') !== 
-'base64') { // Take first available plain text
-							return $subPart->getBody();
-						} elseif (Strings::startsWith($contentType, 'multipart/alternative')) {
-							$queue[] = $subPart;
-						}
-					}
-				}
-				return $part->getBody();
-			});
-		}
-		return $this->latte;
 	}
 }
