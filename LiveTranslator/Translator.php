@@ -83,7 +83,7 @@ class Translator implements Nette\Localization\ITranslator
 			return $this->lang;
 		}
 		if ($this->presenterLanguageParam) {
-			$presenter = $this->application->presenter;
+			$presenter = $this->application->getPresenter();
 			if (isset($presenter->{$this->presenterLanguageParam})) {
 				$this->setCurrentLang($presenter->{$this->presenterLanguageParam});
 				return $this->lang;
